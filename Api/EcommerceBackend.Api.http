@@ -1,0 +1,37 @@
+@host = http://localhost:5133
+@productId = 00000000-0000-0000-0000-000000000000
+
+### List products (paged + search)
+GET {{host}}/api/products?page=1&pageSize=20&search=
+Accept: application/json
+
+### Get product by id
+GET {{host}}/api/products/{{productId}}
+Accept: application/json
+
+### Create product
+POST {{host}}/api/products
+Content-Type: application/json
+
+{
+  "name": "Wireless Mouse",
+  "description": "Ergonomic 2.4GHz wireless mouse",
+  "sku": "MOUSE-001",
+  "price": 24.99,
+  "stockQuantity": 150
+}
+
+### Update product
+PUT {{host}}/api/products/{{productId}}
+Content-Type: application/json
+
+{
+  "name": "Wireless Mouse Pro",
+  "description": "Ergonomic wireless mouse with silent clicks",
+  "sku": "MOUSE-001",
+  "price": 29.99,
+  "stockQuantity": 120
+}
+
+### Delete product
+DELETE {{host}}/api/products/{{productId}}

@@ -13,24 +13,25 @@ public sealed class Product : Entity
     public string Sku { get; private set; } = null!;
     public decimal Price { get; private set; }
     public int StockQuantity { get; private set; }
+    public bool IsDiscounted { get; private set; }
 
     // Required by EF Core.
     private Product() { }
 
-    public static Product Create(string name, string? description, string sku, decimal price, int stockQuantity)
+    public static Product Create(string name, string? description, string sku, decimal price, int stockQuantity, bool isDiscounted = false)
     {
         var product = new Product();
-        product.Apply(name, description, sku, price, stockQuantity);
+        product.Apply(name, description, sku, price, stockQuantity, isDiscounted);
         return product;
     }
 
-    public void Update(string name, string? description, string sku, decimal price, int stockQuantity)
+    public void Update(string name, string? description, string sku, decimal price, int stockQuantity, bool isDiscounted = false)
     {
-        Apply(name, description, sku, price, stockQuantity);
+        Apply(name, description, sku, price, stockQuantity, isDiscounted);
         UpdatedAt = DateTime.UtcNow;
     }
 
-    private void Apply(string name, string? description, string sku, decimal price, int stockQuantity)
+    private void Apply(string name, string? description, string sku, decimal price, int stockQuantity, bool isDiscounted = false)
     {
         if (string.IsNullOrWhiteSpace(name) || name.Trim().Length > NameMaxLength)
             throw new DomainException($"Name is required and must be at most {NameMaxLength} characters.");
@@ -48,6 +49,7 @@ public sealed class Product : Entity
         Sku = NormalizeSku(sku);
         Price = price;
         StockQuantity = stockQuantity;
+        IsDiscounted = isDiscounted;
     }
 
     public static string NormalizeSku(string sku) => sku.Trim().ToUpperInvariant();

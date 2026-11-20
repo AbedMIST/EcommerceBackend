@@ -6,7 +6,7 @@ using FluentValidation;
 
 namespace EcommerceBackend.Application.Products.Commands;
 
-public sealed record CreateProductCommand(string Name, string? Description, string Sku, decimal Price, int StockQuantity)
+public sealed record CreateProductCommand(string Name, string? Description, string Sku, decimal Price, int StockQuantity, bool IsDiscounted = false)
     : ICommand<Result<ProductResponse>>;
 
 internal sealed class CreateProductCommandValidator : AbstractValidator<CreateProductCommand>
@@ -30,7 +30,7 @@ internal sealed class CreateProductCommandHandler(IProductRepository repository)
         if (await repository.SkuExistsAsync(sku, ct: ct))
             return ProductErrors.DuplicateSku(sku);
 
-        var product = Product.Create(command.Name, command.Description, command.Sku, command.Price, command.StockQuantity);
+        var product = Product.Create(command.Name, command.Description, command.Sku, command.Price, command.StockQuantity, command.IsDiscounted);
         await repository.AddAsync(product, ct);
 
         return ProductResponse.FromEntity(product);

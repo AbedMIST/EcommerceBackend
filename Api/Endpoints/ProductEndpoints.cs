@@ -63,7 +63,7 @@ public static class ProductEndpoints
     private static async Task<Results<CreatedAtRoute<ProductResponse>, ProblemHttpResult>> Create(
         CreateProductRequest request, ISender sender, CancellationToken ct)
     {
-        var command = new CreateProductCommand(request.Name, request.Description, request.Sku, request.Price, request.StockQuantity);
+        var command = new CreateProductCommand(request.Name, request.Description, request.Sku, request.Price, request.StockQuantity, request.IsDiscounted);
         var result = await sender.Send(command, ct);
         return result.IsSuccess
             ? TypedResults.CreatedAtRoute(result.Value, "GetProductById", new { id = result.Value.Id })
@@ -73,7 +73,7 @@ public static class ProductEndpoints
     private static async Task<Results<Ok<ProductResponse>, ProblemHttpResult>> Update(
         Guid id, UpdateProductRequest request, ISender sender, CancellationToken ct)
     {
-        var command = new UpdateProductCommand(id, request.Name, request.Description, request.Sku, request.Price, request.StockQuantity);
+        var command = new UpdateProductCommand(id, request.Name, request.Description, request.Sku, request.Price, request.StockQuantity, request.IsDiscounted);
         var result = await sender.Send(command, ct);
         return result.IsSuccess ? TypedResults.Ok(result.Value) : result.Error!.ToProblem();
     }

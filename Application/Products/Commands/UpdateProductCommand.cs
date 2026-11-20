@@ -6,7 +6,7 @@ using FluentValidation;
 
 namespace EcommerceBackend.Application.Products.Commands;
 
-public sealed record UpdateProductCommand(Guid Id, string Name, string? Description, string Sku, decimal Price, int StockQuantity)
+public sealed record UpdateProductCommand(Guid Id, string Name, string? Description, string Sku, decimal Price, int StockQuantity, bool IsDiscounted = false)
     : ICommand<Result<ProductResponse>>;
 
 internal sealed class UpdateProductCommandValidator : AbstractValidator<UpdateProductCommand>
@@ -35,7 +35,7 @@ internal sealed class UpdateProductCommandHandler(IProductRepository repository)
         if (await repository.SkuExistsAsync(sku, excludeId: command.Id, ct))
             return ProductErrors.DuplicateSku(sku);
 
-        product.Update(command.Name, command.Description, command.Sku, command.Price, command.StockQuantity);
+        product.Update(command.Name, command.Description, command.Sku, command.Price, command.StockQuantity, command.IsDiscounted);
         await repository.UpdateAsync(product, ct);
 
         return ProductResponse.FromEntity(product);

@@ -9,9 +9,10 @@ public sealed record ProductResponse(
     string Sku,
     decimal Price,
     int StockQuantity,
+    bool IsDiscounted,
     DateTime CreatedAt,
     DateTime? UpdatedAt)
 {
     public static ProductResponse FromEntity(Product p) =>
-        new(p.Id, p.Name, p.Description, p.Sku, p.Price, p.StockQuantity, p.CreatedAt, p.UpdatedAt);
+        new(p.Id, p.Name, p.Description, p.Sku, p.Price, p.StockQuantity, p.IsDiscounted, p.CreatedAt, p.UpdatedAt);
 }
